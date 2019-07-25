@@ -1,7 +1,7 @@
 import React from 'react';
-import Dashboard from './Dashboard';
-import Sidebar from './Sidebar';
-import Details from './Details';
+import Dashboard from '../Dashboard/Dashboard';
+// import Sidebar from './Sidebar';
+// import Details from './Details';
 
 import './App.css';
 
@@ -10,8 +10,8 @@ function App() {
     <div className="App">
       <h2>vamo</h2>
       <Dashboard />
-      <Sidebar />
-      <Details />
+      {/* <Sidebar />
+      <Details />  */}
     </div>
   );
 }
