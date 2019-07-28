@@ -29,7 +29,7 @@ export class AlertGeneral extends Component {
               there are currently no weather alerts in your area.
             </div>
             <div className='alertbutton'>
-              <Link to='/alerts'>
+              <Link to='/disaster'>
                 Prepare in case of future alerts
               </Link>
             </div>
