@@ -1,62 +1,105 @@
 import React, { Component } from 'react';
+import Moment from 'react-moment';
 import axios from 'axios';
-import ClearSky from '../assets/Clear.svg';
+import AlertGeneral from '../containers/AlertGeneral/AlertGeneral';
+import FetchWeather from '../services/FetchWeather';
 
-const WEATHER_KEY = process.env.REACT_APP_WEATHER_KEY;
-const weatherUrl = 'https://cors-anywhere.herokuapp.com/https://api.forecast.io/forecast/'; //prepend with heroku site so that the API works from browser
+const weatherUrl = 'http://localhost:4001'
 
 export class Weather extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      alerts: [],
-      currently: 'loading', 
-      forecast: {}
+      nameCity: '',
+      forecast: [],
+      alertCity: '',
+      listCity: '',
+      alertTitle: '',
+      alertDescription: ''
     }
   }
 
   componentDidMount() {
     this.getWeather();
+    this.getCity();
+  } 
+  
+  getWeather = async () => {
+    const city = this.state.nameCity === '' || this.state.nameCity === undefined ?
+      'Barcelona' : this.state.nameCity;
+    this.setState({nameCity: city});
+    const generalWeather = await FetchWeather
+      .apiRequest({ city })
+      .catch(error => console.log(error));
+    this.setState({forecast: generalWeather});
   }
 
-  getWeather = (latitude, longitude) => {
-    const success = position => {
-      const { latitude, longitude } = position.coords;
-  
-      axios
-        .get(`${weatherUrl}${WEATHER_KEY}/${latitude},${longitude}`)
-        .then(res => res.data)
-        .then(forecast => this.setState({forecast, currently: 'success'}))
-        .catch(() => this.setState({currently: 'error'}))
-    }
-    const error = () => {
-      alert('Cannot retrieve the weather for this location.');
-    }
-    navigator.geolocation.getCurrentPosition(success, error); //method to get current position of device   
-  } 
+  getCity = async () => {
+    await axios({
+      method: 'get', 
+      url: `${weatherUrl}/alerts/:city`,
+      'content-type': 'application/json'
+    })
+    .then(alerts => {
+      const city = alerts.data.city;
+      const lcCity = city.toLowerCase();
+      this.setState({listCity: lcCity});
+    })
+    .catch(error => console.log('Error:', error));
+  }
 
+  handleChange = event => {
+    const input = (event.target.value).toLowerCase();
+    this.setState({nameCity: input});
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.getWeather();
+    this.getCity();
+    this.setState({alertCity: this.state.nameCity});
+    this.setState({nameCity: ''});
+  }
+    
   render() {
-    const { currently, forecast } = this.state;
+    const { forecast } = this.state;       
     return (
-      <div>
-        {currently === 'loading' ? (
-          <p>Loading...</p>
-        ) : currently === 'error' ?  (
-          <p>There was an error</p>
-        ) : (
-          <div>
-            <p>Hey! It's {new Date().toLocaleDateString('en-us',  {weekday: 'long' })}</p>
-            <p>The sky is {forecast.currently.summary}</p>
-            <p>The current temperature is: {forecast.currently.temperature}</p>
-            <img src={ClearSky} alt='icon of weather'></img>
-            <p></p>
-          </div>
-        )}
+      <div className="weather">
+        <p>Hey there! It's {new Date().toLocaleDateString('en-us',  {weekday: 'long' })}</p>
+        <div className="form">
+          <form >
+            <input 
+              className="city" type="text" 
+              onChange={this.handleChange} 
+              value={this.state.nameCity} 
+              placeholder="Type a city name" 
+            />
+            <input className="input" onClick={this.handleSubmit} type="submit"/>
+          </form>
+        </div>
+        <p className="title">
+          {forecast[0]}<br/>
+          {forecast[1]} | {forecast[2]} 
+        </p>
+        <AlertGeneral  region={this.state.forecast[1]} 
+          nameCity={this.state.nameCity} 
+          alertCity={this.state.alertCity} 
+          listCity={this.state.listCity} 
+        />
+        <p className="temperature"> {forecast[10]} °C</p>
+        <Moment className="time">
+          {forecast[9]}
+        </Moment>          
+        <div className="conditions">
+          <img className="icon" alt="icon of weather conditions" src={forecast[32]}/>
+          <p className="summary">
+            The day is<br/>
+            {forecast[31]}.
+          </p>
+        </div>   
       </div>
     )
   }
 }
 
 export default Weather;
-
-

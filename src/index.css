@@ -1,13 +1,164 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: Quicksand;
+  background: #233127;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.App {
+  background: #233127;
+  width: 50%;
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+  width: 60vw; 
+  -webkit-box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
+  box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
+  align-content: center;
+  margin-bottom: 30px;
+}
+
+.city {
+  flex-grow: 2;
+}
+
+.input {
+  flex-grow: 1;
+}
+
+form input {
+  padding: 10px;
+  font-size: 1.4rem;
+  border: 1px solid #ffc145;
+  background: none;
+}
+
+form input[type="text"] {
+  border-radius: 5px 0px 0px 5px;
+  color: #fff;
+}
+
+form input[type="submit"] {
+  border-radius: 0px 5px 5px 0px;
+  background: #ffc145;
+  color: #111;
+}
+
+.weather {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.weather .icon {
+  width: 120px;
+  border-top: 1px dotted #ffc145;
+  border-bottom: 1px dotted #ffc145;
+}
+
+.alertbox {
+  border: 1px solid #ffc145;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.alertbutton {
+  background-color:#ffc145;
+	-moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  -webkit-box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
+  box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
+	border-radius:5px;
+	border:1px solid #223127;
+	display:inline-block;
+	cursor:pointer;
+	color:#223127;
+	font-family:Arial;
+	font-size:10px;
+  padding:8px 16px;
+  margin-bottom: 10px;
+  text-decoration:none;
+  font-weight: 500;
+	text-shadow:0px 1px 0px #2f6627;
+}
+
+
+.alert {
+  font-size: 1.0rem;
+}
+
+.alerts:hover {
+	background-color:#233127;
+}
+.alerts:active {
+	position:relative;
+	top:1px;
+}
+
+.temperature {
+  font-size: 2rem;
+  margin-top: 20px;
+}
+
+.weather .title {
+  margin-top: -5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffc145;
+}
+.weather .time {
+  font-size: 1.0rem;
+  margin-top: -10px;
+}
+.weather .conditions {
+  padding: 20px 0;
+  justify-content: space-around;
+}
+.weather .conditions p {
+  font-size: 1.5rem;
+  padding: 0;
+  margin: 0;
+  margin-top: 20px;
+}
+
+.summary {
+  margin: 20px;
+}
+
+.weather .powered {
+  color: #888;
+  text-align: right;
+}
+
+.alertdetail {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.emergency-title {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.list {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.description {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.source {
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 20px;
 }

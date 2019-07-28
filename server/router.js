@@ -3,9 +3,8 @@ const router = express.Router();
 
 const controller = require('./controller/index');
 
-router.get('/alerts', controller.getAlert);
+router.get('/alerts/:city', controller.getAlert); //don't change path!
 
-router.get('/alerts/emergency', controller.getPreparations);
-
+router.get('/alerts', controller.getPreparations);
 
 module.exports = router;

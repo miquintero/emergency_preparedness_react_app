@@ -4,7 +4,8 @@ const Preparation = require('../model/preparation');
 
 exports.getAlert = async (req, res) => {
   try {
-    const alert = await Alert.findOne({city: req.body}); 
+    // const userInput = req.body;
+    const alert = await Alert.findOne({city: 'Atlanta'}); 
     res.status(200).send(alert);
   } catch (error) {
     console.log('error', error); //eslint-disable-line no-console
@@ -12,6 +13,13 @@ exports.getAlert = async (req, res) => {
     res.send({error: error.errors})
   }
 }
+
+// exports.seedAlerts = (req, res) => {
+//   const emergencyAlert ={};
+//   const newAlert = new Alert(emergencyAlert);
+//   newAlert.save();
+//   res.send('Database seeded!');
+// }
 
 exports.getPreparations = async (req, res) => {
   try {
@@ -23,3 +31,10 @@ exports.getPreparations = async (req, res) => {
     res.send({error: error.errors})
   }
 }
+
+// exports.seedAlerts = (req, res) => {
+//   const emergencyPrep = {};
+//   const newPrep = new Preparation(emergencyPrep);
+//   newPrep.save();
+//   res.send('Database seeded for preparations lists!');
+// }

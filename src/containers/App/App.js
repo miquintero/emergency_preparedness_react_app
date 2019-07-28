@@ -1,17 +1,19 @@
 import React from 'react';
 import Dashboard from '../Dashboard/Dashboard';
-// import Sidebar from './Sidebar';
-// import Details from './Details';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import EmergencyDetails from '../EmergencyDropdown/EmergencyDropdown';
+import AlertDetails from '../AlertDetails/AlertDetails';
 
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <h2>vamo</h2>
-      <Dashboard />
-      {/* <Sidebar />
-      <Details />  */}
+      <Router>
+        <Route exact path='/' component={Dashboard} />
+        <Route path='/disaster' component={EmergencyDetails} />
+        <Route path='/alerts/:city' component={AlertDetails} />
+      </Router>
     </div>
   );
 }
