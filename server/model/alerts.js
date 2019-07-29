@@ -10,15 +10,22 @@ const AlertSchema = new Schema({
     type: String, 
     required: true
   }, 
+  type: {
+    type: String,
+    required: true
+  },
   expires: {
-    type: Number, 
+    type: String, 
     required: true
   },
   description: {
     type: String, 
     required: true
   },
-  uri: String, 
+  severity: {
+    type: String,
+    required: true
+  } 
 });
 
 module.exports = mongoose.model('alert', AlertSchema);

@@ -4,6 +4,8 @@ import axios from 'axios';
 import AlertGeneral from '../containers/AlertGeneral/AlertGeneral';
 import FetchWeather from '../services/FetchWeather';
 
+//for time: time.slice(14,19)
+
 const weatherUrl = 'http://localhost:4001'
 
 export class Weather extends Component {
@@ -62,7 +64,7 @@ export class Weather extends Component {
   }
     
   render() {
-    const { forecast } = this.state;       
+    const { forecast } = this.state;    
     return (
       <div className="weather">
         <p>Hey there! It's {new Date().toLocaleDateString('en-us',  {weekday: 'long' })}</p>
@@ -86,9 +88,9 @@ export class Weather extends Component {
           alertCity={this.state.alertCity} 
           listCity={this.state.listCity} 
         />
-        <p className="temperature"> {forecast[10]} °C</p>
+        <p className="temperature"> {forecast[10]}°C</p>
         <Moment className="time">
-          {forecast[9]}
+          {forecast[7]}
         </Moment>          
         <div className="conditions">
           <img className="icon" alt="icon of weather conditions" src={forecast[32]}/>

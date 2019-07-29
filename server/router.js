@@ -4,7 +4,9 @@ const router = express.Router();
 const controller = require('./controller/index');
 
 router.get('/alerts/:city', controller.getAlert); //don't change path!
+router.get('/seeda', controller.seedAlerts);
 
-router.get('/alerts', controller.getPreparations);
+router.get('/disaster', controller.getPreparations);
+router.get('/seedp', controller.seedPreparations);
 
 module.exports = router;
