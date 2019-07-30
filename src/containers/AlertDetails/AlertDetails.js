@@ -1,7 +1,62 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import styled from 'styled-components'
 
-const serverUrl = 'http://localhost:4001'
+import './list.css';
+
+import Thermometer from '../../assets/flood.png';
+
+const serverUrl = 'http://localhost:4001';
+// const { city } = this.props.match.params;
+
+const AlertContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const EmergencyContainer = styled.div`
+  display: flex;
+`;
+
+const EmergencyTitle = styled.p`
+  font-size: 30px;
+  margin-top: 30px;
+  text-align: center;
+`;
+
+const Icon = styled.img`
+  margin-top: -20px;
+  display: inline-block;
+`;
+
+const AlertTitle = styled.p`
+  margin-top: -10px;
+  font-size: 20px;
+  margin-left: 20px;
+`;
+
+const ExpirationTitle = styled.div`
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 14px;
+  text-align: center;
+  font-weight: 600;
+`;
+
+const Description = styled.div`
+  margin-bottom: 20px;
+`;
+
+const List = styled.ul`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 300px;
+  margin-top:200px;
+`;
 
 export class AlertDetails extends Component {
 
@@ -19,44 +74,44 @@ export class AlertDetails extends Component {
   }
 
   componentDidMount() {
-    this.getAlertDetails();
-    this.getPreparations();
+    this.getAlertDetails(this.props.match.params.city)
+      .then(() => 
+        this.getPreparations(this.state.emergencyTypeAlert)
+      );
   }
 
-  getAlertDetails = async () => {
-    await axios({
+  getAlertDetails = async (city) => {
+    return await axios({
       method: 'get', 
-      url: `${serverUrl}/alerts/city`,
+      url: `${serverUrl}/alerts/${city}`,
       'content-type': 'application/json'
     })
-    .then(alerts => {
-      const alertTitle = alerts.data.title;
-      const alertDescription = alerts.data.description;
-      const emergencyType = alerts.data.type;
-      const alertLevel = alerts.data.severity;
-      const expirationTime = alerts.data.expires;
-      console.log(alertLevel); 
+    .then(({ data }) => {
+      // console.log(data);
       //add in the alert, watch, and warning icons
-      this.setState({alertTitle: alertTitle});
-      this.setState({alertDescription: alertDescription});
-      this.setState({emergencyTypeAlert: emergencyType});
-      this.setState({alertLevel: alertLevel});
-      this.setState({expirationTime: expirationTime });
+      this.setState({
+        alertTitle: data.title,
+        alertDescription: data.description,
+        emergencyTypeAlert: data.type,
+        alertLevel: data.severity,
+        expirationTime: data.expires
+      })
     })
     .catch(error => console.log('Error:', error));
   }
 
-  getPreparations = async () => {
+  getPreparations = async (disaster) => {
     await axios({
       method: 'get', 
-      url: `${serverUrl}/disaster`,
+      url: `${serverUrl}/disaster/${disaster}`,
       'content-type': 'application/json'
     })
-    .then(preparations => {
-      const emergencyType = preparations.data.emergency;
-      const preparationsList = preparations.data.list;
-      this.setState({emergencyTypePreparation: emergencyType});
-      this.setState({preparationsList: preparationsList});
+    .then(({ data }) => {
+      console.log('my info:', data);
+      data && this.setState({
+        emergencyTypePreparations: data.emergency,
+        preparationsList: data.list
+      });
     })
     .catch(error => console.log('Error:', error));
   }
@@ -74,31 +129,25 @@ export class AlertDetails extends Component {
     const emergencyItems = 
       preparationsList
         .map(item => 
-        <li key={item}>
+        <li key={item} className="prep">
           {item}
         </li>
       )
     return (
-      <div className="alertdetail">
-        <h1 className="emergency-title">
-          {`${(city).charAt(0).toUpperCase()}${(city).slice(1)}`}<br/>
-          prepare for a {(emergencyTypeAlert).toLowerCase()}
-        </h1>
-        <h3 className="alertTitle">{alertTitle}</h3>
-        <div className="expiration">{`This alert expires in ${expirationTime}`}</div>
-        <div className="description">{alertDescription}</div>
-        <div className="list">
-          {(emergencyTypeAlert === emergencyTypePreparations) ?     
-            <div className="list">
-              {emergencyItems}
-            </div>  
-            :
-            <div>
-              {`Sorry, there are currently no suggestions for ${emergencyTypeAlert} preparation`}
-            </div>
-          }
-        </div>  
-      </div>
+      <AlertContainer>
+        <EmergencyTitle>
+          {`${(city).charAt(0).toUpperCase()}${(city).slice(1)}`}<br/>prepare for a {(emergencyTypeAlert).toLowerCase()}
+        </EmergencyTitle>
+        <EmergencyContainer>
+          <Icon className="icon" width="80"src={Thermometer}/>
+          <AlertTitle>{alertTitle}</AlertTitle>
+        </EmergencyContainer>
+        <ExpirationTitle>Alert expiration:<br/>{expirationTime}</ExpirationTitle>
+        <Description className="description">{alertDescription}</Description>
+        <List>
+          {emergencyItems}
+        </List>  
+      </AlertContainer>
     )
   }
 }

@@ -4,9 +4,8 @@ const Preparation = require('../model/preparation');
 
 exports.getAlert = async (req, res) => {
   try {
-    // const userInput = req.params;
-    // const alert = await Alert.findOne({city: 'Sacramento'}); 
-    const alert = await Alert.find(); 
+    console.log('city name', req.params.city);
+    const alert = await Alert.findOne({city: req.params.city}); 
     res.status(200).send(alert);
   } catch (error) {
     console.log('error', error); //eslint-disable-line no-console
@@ -16,24 +15,31 @@ exports.getAlert = async (req, res) => {
 }
 
 exports.seedAlerts = (req, res) => {
-  const emergencyAlert = {
-    "city" : "Sacramento",
-    "title" : "Possibility wildfires will start and spread easily in Sacramento Valley",
-    "type" : "Wildfire",
-    "expires" : "4 days and 20 hours",
-    "description" : "Two massive fires have started in San Joaquin County,\nCalifornia. Winds are blowing north with gusts up to 50mph. The\nupdated warning indicates the possibility that fires start\nin Sacramento County. Northern California’s Red Flag Warning\nwill last into Sunday.",
-    "severity" : "warning"
-  };  
-  const newAlert = new Alert(emergencyAlert);
-  newAlert.save();
-  res.send('Database seeded!');
+  try {
+    const emergencyAlert =   {
+      "city" : "santiago",
+      "title" : "6.3- magnitude Earthquake hit Santiago, Chile",
+      "type" : "earthquake",
+      "expires" : "26 hours",
+      "description" : "Early Wednesday morning an earthquake impacted Santiago.\nThe epicenter was 15 kilometers southwest of the center of the\ncity in Mapiu. Aftershocks and tremors may be felt up to\n36kms away from Santiago.",
+      "severity" : "warning"
+    };  
+    const newAlert = new Alert(emergencyAlert);
+    newAlert.save();
+    res.status(201);
+    res.send('Database seeded!');
+  } catch (error) {
+    console.log('error', error); //eslint-disable-line no-console
+    res.status(500);
+    res.send({error: error.errors})
+  }
 }
 
 exports.getPreparations = async (req, res) => {
   try {
-    // const userChoice = req.body;
-    // const preparations = await Preparation.findOne({emergency: 'Flood'});
-    const preparations = await Preparation.find();  
+    console.log('emergency type', req.params.type);
+    const preparations = await Preparation.findOne({emergency: req.params.type}); 
+    console.log(preparations);
     res.status(200).send(preparations);
   } catch (error) {
     console.log('error', error); //eslint-disable-line no-console
@@ -43,17 +49,24 @@ exports.getPreparations = async (req, res) => {
 }
 
 exports.seedPreparations = (req, res) => {
-  const emergencyPrep = {
-    'emergency': 'Wildfire',
-    'list': [
-      'Plan two ways out of your neighborhood and designate a meeting place.',
-      'Clear leaves and other debris from gutters, eaves, porches and decks. This prevents embers from igniting your home',      
-      'Keep your lawn hydrated and maintained. If it is brown, cut it down to reduce fire intensity. Dry grass and shrubs are fuel for wildfire.',
-      'Prune trees so the lowest branches are 6 to 10 feet from the ground.', 
-      'Remove flammable materials (firewood stacks, propane tanks) within 30 feet of your home’s premises.'
-    ]
-  };
-  const newPrep = new Preparation(emergencyPrep);
-  newPrep.save();
-  res.send('Database seeded for preparations lists!');
+  try {
+    const emergencyPrep =   {
+      'emergency': 'tsunami',
+      'list': [
+        'Avoid building or living in buildings within several hundred feet of the coastline.',
+        'Plan an evacuation route from your home, school, workplace, or any other place you will be where tsunamis present a risk', 
+        'Make a list of items to bring inside in the event of a tsunami.', 
+        'Elevate coastal homes.',
+        'Be careful to avoid downed power lines and stay away from buildings and bridges from which heavy objects might fall during an aftershock.',
+        'Follow flood and earthquake preparedness precautions.'
+      ]
+    };
+    const newPrep = new Preparation(emergencyPrep);
+    newPrep.save();
+    res.send('Database seeded for preparations lists!');
+  } catch (error) {
+    console.log('error', error); //eslint-disable-line no-console
+    res.status(500);
+    res.send({error: error.errors})
+  }
 }

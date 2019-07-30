@@ -1,7 +1,54 @@
   import React, { Component } from 'react'
   import axios from 'axios';
+  import styled from 'styled-components'
 
   const serverUrl = 'http://localhost:4001'
+
+  const AlertContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    `;
+
+const EmergencyTitle = styled.div`
+    text-align: center;
+    font-size: 36px;
+    margin-top: 40px;
+    `;
+
+const DropDown = styled.div`
+  align-items:center;
+  /* position: relative; */
+  /* display: inline-block; */
+  top: 40px;
+  margin: 30px 0;
+  /* margin-bottom: 50px; */
+  height:18px;
+  background-color: #FFC145 ;
+  padding:12px;
+  border-radius:5px;
+  font-weight:bold;
+  color:white;
+  ::before{
+    content:"";
+    position:absolute;
+    width:0px;
+    height:0px;
+    border: 10px solid;
+    border-color: white transparent transparent transparent;
+    right:6px;
+    top:18px;
+  }
+  `;
+
+  const MoreInfo = styled.a`
+    display: flex;
+    /* position: fixed; */
+    justify-content: center;
+    align-items: flex-end;
+    text-align: center;
+    /* margin-bottom: 20px; */
+  `;
 
   export class EmergencyDropdown extends Component {
 
@@ -15,25 +62,27 @@
       }
     }
 
-    componentDidMount() {
-      this.getSuggestions();
+    componentDidUpdate(prevProps, prevState) {
+      if (prevState.selectedEmergency !== this.state.selectedEmergency) {
+        this.getSuggestions(this.state.selectedEmergency);
+      }
     }
 
-    getSuggestions = async () => {
+    getSuggestions = async (disaster) => {
       await axios({
         method: 'get', 
-        url: `${serverUrl}/disaster`,
+        url: `${serverUrl}/disaster/${disaster}`,
         'content-type': 'application/json'
       })
-      .then(preparations => {
-        const emergencyType = preparations.data.emergency; 
-        const preparationsList = preparations.data.list;
-        this.setState({emergencyType: emergencyType});
-        this.setState({preparationsList: preparationsList});
-      })
+      .then(({ data }) => {
+          data && this.setState({
+            emergencyType: data.emergency, 
+            preparationsList: data.list
+          });
+        })
       .catch(error => console.log('Error:', error));
     }
-    
+
     displayDropdown = (event) => {
       event.preventDefault();
       this.setState({ displayMenu: true }, () => {
@@ -47,8 +96,8 @@
       })
     }
 
-    selectEmergency = (event) => {
-      this.setState({selectedEmergency: event.target.innerHTML})
+    selectEmergency = (emergency) => {
+      this.setState({selectedEmergency: emergency})
     }
 
     render() {
@@ -59,18 +108,18 @@
         selectedEmergency
       } = this.state;
       const emergencyList = [
-        'Floods',
-        'Earthquakes',
-        'Wildfires',
-        'Tsunamis',
-        'Volcanic eruptions',
-        'Tornadoes',
-        'Apocalypse'
+        'flood',
+        'earthquake',
+        'wildfire',
+        'tsunami',
+        'volcanic eruption',
+        'tornado',
+        'apocalypse'
       ];
       const emergencyItems = 
         emergencyList
           .map(item => 
-            <li key={item} value={item}>
+            <li key={item} value={item} onClick={() => {this.selectEmergency(item)}}>
               {item}
             </li>
           )
@@ -82,40 +131,33 @@
             </li>
           )
       return (
-        <div className="alertDetail">
-          <div className='dropdown' style = {{background:'grey',width:'200px'}}>
-            <div className='button' onClick={this.displayDropdown}>Disasters</div>
-              {displayMenu ? (
-                <div>
-                  <div 
-                    value={selectedEmergency} 
-                    onClick={this.selectEmergency}
-                  >
+        <div>
+          <AlertContainer>
+          <EmergencyTitle>
+            How to prep for<br/>
+            the unexpected
+            <br/> {emergencyType}
+          </EmergencyTitle>
+          <div>
+            <DropDown onClick={this.displayDropdown}>Disasters</DropDown>
+              {displayMenu ? 
+                (<div>
+                  <div value={selectedEmergency} >
                     {emergencyItems}
                   </div>
-                </div>
-                )
+                </div>)
                 :
-                (
-                  null
-                )
+                (null)
               }
+            <div className='list'>
+              {selectedEmergency ? 
+                (<div>{preparationsItems}</div>):
+                (null)
+              }
+            </div>
           </div>
-          <h1 className='emergency-title'>
-            How to prep for<br/>
-            the unexpected:
-            <br/> {(emergencyType).toLowerCase()}
-          </h1>
-          <div className='list'>
-            {selectedEmergency && selectedEmergency === emergencyType ? (
-              <li>{preparationsItems}</li> 
-            )
-            :
-            (
-              <a href='https://www.ready.gov/'>Extra information on prepping for natural disasters</a>
-            )
-            }
-          </div>
+          </AlertContainer>
+         <MoreInfo href='https://www.ready.gov/'>More info at Ready</MoreInfo>
         </div>
       )
     }
