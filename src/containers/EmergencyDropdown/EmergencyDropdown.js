@@ -1,34 +1,47 @@
   import React, { Component } from 'react'
   import axios from 'axios';
-  import styled from 'styled-components'
+  import styled from 'styled-components';
+  import Header from '../Header/Header';
+  import './bounce.css';
 
-  const serverUrl = 'http://localhost:4001'
+  const serverUrl = 'http://localhost:4004'
 
   const AlertContainer = styled.div`
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    `;
+  `;
 
 const EmergencyTitle = styled.div`
     text-align: center;
     font-size: 36px;
     margin-top: 40px;
+    margin-bottom: 32px;
+    line-height: 0.8;
+    color: #223127;
+    font-weight: 600;
+    text-shadow: -50px 0px 1px rgba(66,66,66,.0);
     `;
 
 const DropDown = styled.div`
   align-items:center;
   /* position: relative; */
   /* display: inline-block; */
+  -moz-box-shadow: -1px 2px 16px -1px #4d544b;
+	-webkit-box-shadow: -1px 2px 16px -1px #4d544b;
   top: 40px;
-  margin: 30px 0;
-  /* margin-bottom: 50px; */
+  margin: -20px 0 -10px 0;
+  list-style: none;
+  margin-bottom: 30px;
   height:18px;
   background-color: #FFC145 ;
   padding:12px;
+  font-size: 20px;
   border-radius:5px;
-  font-weight:bold;
-  color:white;
+  font-weight:600;
+  color: #223127;
+  text-shadow: -50px 0px 1px rgba(66,66,66,.0);
   ::before{
     content:"";
     position:absolute;
@@ -41,14 +54,57 @@ const DropDown = styled.div`
   }
   `;
 
+  const Bounce = styled.div`
+    margin: 0;
+  `;
+
+  const Items = styled.div`
+    list-style: none;
+    margin-left: 40px;
+    margin-top: -15px;
+    margin-bottom: 120px;
+    font-size: 24px;
+    color: #4E5166;
+    font-weight: 700;
+    background-color: #EDEAD0;
+    border-radius: 5px;
+    padding: 20px;
+  `;
+
   const MoreInfo = styled.a`
     display: flex;
-    /* position: fixed; */
+    position: fixed;
     justify-content: center;
     align-items: flex-end;
     text-align: center;
-    /* margin-bottom: 20px; */
+    margin-top: 20px;
   `;
+
+  const ListItems = styled.div`
+    /* margin-right: 20px; */
+    border-bottom: 2px #3AB795 dotted;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #223127;
+  `;
+
+  const Bolded = styled.div`
+    color: #908484;
+    font-weight: 700;
+    font-size:40px;
+    /* margin-top: -5px; */
+    margin-bottom: -10px;
+  `;
+
+  const List = styled.div`
+    display: flex;
+    position: fixed;
+    width: 70%;
+    margin-top: -20px;
+    justify-content: center;
+    overflow: scroll;
+`;
 
   export class EmergencyDropdown extends Component {
 
@@ -60,6 +116,10 @@ const DropDown = styled.div`
         preparationsList: [],
         selectedEmergency: ''
       }
+    }
+
+    componentDidMount() {
+      this.noLoad();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -100,6 +160,13 @@ const DropDown = styled.div`
       this.setState({selectedEmergency: emergency})
     }
 
+    noLoad = () => {
+      console.log('I have been classd!')
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementsByClassName('preload')[0].classList.remove('preload');
+      })
+    }
+
     render() {
       const { 
         displayMenu, 
@@ -120,45 +187,49 @@ const DropDown = styled.div`
         emergencyList
           .map(item => 
             <li key={item} value={item} onClick={() => {this.selectEmergency(item)}}>
-              {item}
+              {`${(item).charAt(0).toUpperCase()}${(item).slice(1)}`}
             </li>
           )
       const preparationsItems = 
         preparationsList
           .map(item => 
-            <li key={item} value={item}>
+            <ListItems key={item} value={item} className="disasters">
               {item}
-            </li>
+            </ListItems>
           )
       return (
-        <div>
+        <div className="preload">
+        <Header/>
           <AlertContainer>
-          <EmergencyTitle>
-            How to prep for<br/>
-            the unexpected
-            <br/> {emergencyType}
-          </EmergencyTitle>
+          <Bounce className="stage">
+            <EmergencyTitle className="box bounce-5">
+              How to prep for<br/>
+              the unexpected
+              <br/><Bolded>{emergencyType}</Bolded>
+            </EmergencyTitle>
+          </Bounce>
           <div>
-            <DropDown onClick={this.displayDropdown}>Disasters</DropDown>
+            <DropDown onClick={this.displayDropdown}>Natural Disasters (Mostly)</DropDown>
               {displayMenu ? 
                 (<div>
-                  <div value={selectedEmergency} >
+                  <Items value={selectedEmergency}>
                     {emergencyItems}
-                  </div>
+                  </Items>
                 </div>)
                 :
                 (null)
               }
-            <div className='list'>
+            <List className='list'>
               {selectedEmergency ? 
                 (<div>{preparationsItems}</div>):
                 (null)
               }
+            </List>
             </div>
-          </div>
           </AlertContainer>
-         <MoreInfo href='https://www.ready.gov/'>More info at Ready</MoreInfo>
-        </div>
+         {/* <MoreInfo href='https://www.ready.gov/'>More info at Ready</MoreInfo> */}
+          </div>
+      
       )
     }
   }

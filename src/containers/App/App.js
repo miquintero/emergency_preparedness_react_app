@@ -5,6 +5,7 @@ import EmergencyDetails from '../EmergencyDropdown/EmergencyDropdown';
 import AlertDetails from '../AlertDetails/AlertDetails';
 
 import './App.css';
+import AlertBackdrop from '../AlertBackdrop/AlertBackdrop';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       <Router>
         <Route exact path='/' component={Dashboard} />
         <Route path='/disaster' component={EmergencyDetails} />
-        <Route path='/alerts/:city' component={AlertDetails} />
+        <Route path='/alerts/:city' component={AlertBackdrop} />
       </Router>
     </div>
   );

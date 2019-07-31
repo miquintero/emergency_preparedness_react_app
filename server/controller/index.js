@@ -17,12 +17,12 @@ exports.getAlert = async (req, res) => {
 exports.seedAlerts = (req, res) => {
   try {
     const emergencyAlert =   {
-      "city" : "santiago",
-      "title" : "6.3- magnitude Earthquake hit Santiago, Chile",
-      "type" : "earthquake",
-      "expires" : "26 hours",
-      "description" : "Early Wednesday morning an earthquake impacted Santiago.\nThe epicenter was 15 kilometers southwest of the center of the\ncity in Mapiu. Aftershocks and tremors may be felt up to\n36kms away from Santiago.",
-      "severity" : "warning"
+      "city" : "madrid",
+      "title" : "Zombie Apocalypse quickly approaching Madrid",
+      "type" : "apocalypse",
+      "expires" : "No known expiration date",
+      "description" : "Residents of the suburbs of Madrid have begun to encounter signs of zombies inhabiting",
+      "severity" : "alert"
     };  
     const newAlert = new Alert(emergencyAlert);
     newAlert.save();
@@ -51,14 +51,12 @@ exports.getPreparations = async (req, res) => {
 exports.seedPreparations = (req, res) => {
   try {
     const emergencyPrep =   {
-      'emergency': 'tsunami',
+      'emergency': 'apocalypse',
       'list': [
-        'Avoid building or living in buildings within several hundred feet of the coastline.',
-        'Plan an evacuation route from your home, school, workplace, or any other place you will be where tsunamis present a risk', 
-        'Make a list of items to bring inside in the event of a tsunami.', 
-        'Elevate coastal homes.',
-        'Be careful to avoid downed power lines and stay away from buildings and bridges from which heavy objects might fall during an aftershock.',
-        'Follow flood and earthquake preparedness precautions.'
+        'Gather sufficient supplies to survive for 90 days',
+        'Obtain and stockpile basic survival (the most important) items. ',
+        'Set up a communication system. Communicate secret locations with your family members and friends using a radio.', 
+        'Use diesel-powered vehicles. Hoarding gasoline will not work; the chemicals that once kept it fresh will degrade it in time.'
       ]
     };
     const newPrep = new Preparation(emergencyPrep);
