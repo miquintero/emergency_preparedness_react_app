@@ -2,10 +2,9 @@ import React from 'react';
 import Dashboard from '../Dashboard/Dashboard';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import EmergencyDetails from '../EmergencyDropdown/EmergencyDropdown';
-import AlertDetails from '../AlertDetails/AlertDetails';
+import AlertBackdrop from '../AlertBackdrop/AlertBackdrop';
 
 import './App.css';
-import AlertBackdrop from '../AlertBackdrop/AlertBackdrop';
 
 function App() {
   return (

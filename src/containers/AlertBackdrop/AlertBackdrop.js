@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
 import axios from 'axios';
-import Header from '../Header/Header';
-import SideBar from '../Sidebar/Sidebar';
 
-import './list.css';
+import Header from '../../components/Header/Header';
+import { AlertContainer, EmergencyContainer, LogoContainer, IconOne, IconTwo, City, AlertTitle, List, ExpirationTitle, EmergencyTitle, Spacer } from './StyleAlertBackdrop.js';
 
 import Clock from '../../assets/clock.png';
 import Water from '../../assets/Water.png';
@@ -14,6 +12,8 @@ import Wildfire from '../../assets/Wildfire.png';
 import Volcano from '../../assets/Volcano.png';
 import Tornado from '../../assets/Tornado.png';
 import Apocalypse from '../../assets/apocalypse.png';
+
+import './list.css';
 
 const icons = {
   'flood': Flood,
@@ -26,111 +26,6 @@ const icons = {
 }
 
 const serverUrl = 'http://localhost:4004';
-
-const AlertContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* position: fixed; */
-  /* width: 100%; */
-  /* height: 100%; */
-  /* top: 0;
-  left: 0; */
-`;
-
-const EmergencyContainer = styled.div`
-  display: flex;
-  width: 76%;
-  align-content: center;
-  margin: 20px 50px 30px 22px;
-  /* margin-top: -180px; */
-  -webkit-box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
-  padding-right: 10px;
-  border-radius: 5px;
-  background-color: white;
-`;
-
-const LogoContainer = styled.div`
-  display: flex;
-  width: 80%;
-  margin-left: 20px;
-  border-radius: 5px;
-  justify-content: center;  /* margin-left: 60px; */
-  margin-bottom: 20px;
-  background-color: #4E5166;
-  padding-top: 10px;
-  -webkit-box-shadow: 0px 10px 41px -5px rgba(0, 0, 0, 1);
-
-`;
-
-const IconOne = styled.img`
-  margin-top: 40px;
-  margin-left: 20px;
-  /* display: inline-block; */
-  height: 80px;
-  flex: 1;
-`;
-
-const IconTwo = styled.img`
-  margin-left: 20px;
-  /* display: inline-block; */
-  height: 50px;
-`;
-
-const City = styled.p`
-  color: #223127;
-  font-size: 40px;
-  margin-bottom: -50px;
-  font-weight: 800;
-  text-shadow: -50px 0px 1px rgba(66,66,66,.0);
-`;
-
-const AlertTitle = styled.p`
-  /* margin-top: -100px; */
-  font-size: 20px;
-  margin-left: 20px;
-  padding-right: 20px;
-  color: #4E5166;
-  font-weight: 600;
-  flex: 2;
-`;
-
-// const Description = styled.div`
-//   margin-bottom: 20px;
-// `;
-
-const List = styled.ul`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 80%;
-  margin-top:200px;
-  margin-left: 20px;
-`;
-
-const ExpirationTitle = styled.div`
-  font-size: 18px;
-  margin-bottom: 14px;
-  font-weight: 600;
-  color: #223127;
-`;
-
-const EmergencyTitle = styled.div`
-  font-size: 30px;
-  /* margin-top: 30px; */
-  text-align: center;
-  margin-bottom: -5px;
-  color: red;
-  font-weight: 500;
-  `;
-
-const Spacer = styled.div`
-  flex: 1;
-  width: 30px;
-`;
-
 
 export class AlertBackdrop extends Component {
   constructor(props) {
@@ -148,7 +43,6 @@ export class AlertBackdrop extends Component {
   }
 
   componentDidMount() {
-    // this.setState({city: this.props.city})
     this.getAlertDetails(this.props.match.params.city)
       .then(() => 
         this.getPreparations(this.state.emergencyTypeAlert)
@@ -205,10 +99,8 @@ export class AlertBackdrop extends Component {
   render() {
     const { 
       emergencyTypeAlert, 
-      emergencyTypePreparations, 
       preparationsList,
       alertTitle,
-      alertDescription,
       expirationTime
     } = this.state;
     const emergencyItems = 
@@ -230,19 +122,16 @@ export class AlertBackdrop extends Component {
           <Spacer/>
           <AlertTitle>{alertTitle.toUpperCase()}</AlertTitle>
         </EmergencyContainer>
-      {/* <Description className="description">{alertDescription}</Description> */}
         <LogoContainer>
           <ExpirationTitle>Alert expiration:<br/>{expirationTime}</ExpirationTitle>
-          <IconTwo src={Clock} onClick={console.log('click')} onClick={this.props.clickBackdrop}/>
+          <IconTwo src={Clock} onClick={this.props.clickBackdrop}/>
         </LogoContainer>
         <List>
           {emergencyItems}
         </List>  
-        <script> </script>
-
       </AlertContainer>
      )
   }
 }
 
-export default AlertBackdrop
+export default AlertBackdrop;

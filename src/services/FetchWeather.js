@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const WEATHER_KEY = process.env.REACT_APP_WEATHER_KEY;
-const apiUrl = 'https://api.apixu.com/v1/current.json?key=';
+const WEATHER_KEY= 
+const apiUrl= 
 
 const FetchWeather = {
   apiRequest({ city } = {}) {
