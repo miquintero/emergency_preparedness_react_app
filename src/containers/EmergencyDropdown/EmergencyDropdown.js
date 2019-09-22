@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import axios from 'axios';
+
+import dataRequests from '../../utils/DataRequests';
 import Header from '../../components/Header/Header';
 
 import { AlertContainer, EmergencyTitle, DropDown, Bounce, Items, ListItems, Bolded, List } from './StyleEmergencyDropdown';
 import './bounce.css';
-
-const serverUrl = 'http://localhost:4004'
 
 export class EmergencyDropdown extends Component {
 
@@ -26,11 +25,8 @@ export class EmergencyDropdown extends Component {
   }
 
   getSuggestions = async (disaster) => {
-    await axios({
-      method: 'get',
-      url: `${serverUrl}/disaster/${disaster}`,
-      'content-type': 'application/json'
-    })
+    await dataRequests
+      .fetchSuggestions
       .then(({ data }) => {
         data && this.setState({
           emergencyType: data.emergency,

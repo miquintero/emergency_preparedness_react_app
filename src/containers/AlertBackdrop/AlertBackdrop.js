@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 
+import dataRequests from '../../utils/DataRequests';
 import Header from '../../components/Header/Header';
 import { AlertContainer, EmergencyContainer, LogoContainer, IconOne, IconTwo, City, AlertTitle, List, ExpirationTitle, EmergencyTitle, Spacer } from './StyleAlertBackdrop.js';
 
@@ -25,7 +25,6 @@ const icons = {
   'apocalypse': Apocalypse
 }
 
-const serverUrl = 'http://localhost:4004';
 
 export class AlertBackdrop extends Component {
   constructor(props) {
@@ -62,38 +61,32 @@ export class AlertBackdrop extends Component {
   }
 
   getAlertDetails = async (city) => {
-    return await axios({
-      method: 'get', 
-      url: `${serverUrl}/alerts/${city}`,
-      'content-type': 'application/json'
-    })
-    .then(({ data }) => {
-      console.log(data);
-      this.setState({
-        alertTitle: data.title,
-        alertDescription: data.description,
-        emergencyTypeAlert: data.type,
-        alertLevel: data.severity,
-        expirationTime: data.expires
+    await dataRequests
+      .fetchAlert(city)
+      .then(data => {
+        console.log(data);
+        this.setState({
+          alertTitle: data.title,
+          alertDescription: data.description,
+          emergencyTypeAlert: data.type,
+          alertLevel: data.severity,
+          expirationTime: data.expires
       })
     })
     .catch(error => console.log('Error:', error));
   }
 
   getPreparations = async (disaster) => {
-    await axios({
-      method: 'get', 
-      url: `${serverUrl}/disaster/${disaster}`,
-      'content-type': 'application/json'
-    })
-    .then(({ data }) => {
-      console.log('my info:', data);
-      data && this.setState({
-        emergencyTypePreparations: data.emergency,
-        preparationsList: data.list
-      });
-    })
-    .catch(error => console.log('Error:', error));
+    await dataRequests
+      .fetchPreparations(disaster)
+      .then(data => {
+        console.log('my info:', data);
+        data && this.setState({
+          emergencyTypePreparations: data.emergency,
+          preparationsList: data.list
+        });
+      })
+      .catch(error => console.log('Error:', error));
   }
 
   render() {
