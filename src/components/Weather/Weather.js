@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import Moment from 'react-moment';
-import axios from 'axios';
+
 import AlertGeneral from '../AlertGeneral/AlertGeneral';
-import FetchWeather from '../../services/FetchWeather';
+import dataRequests from '../../utils/DataRequests';
 
 import { Wrapper, WeekDay, Logo, FormContainer, InputForm, UserInput, SubmitButton, City, Region, Temperature, Degrees, Time, ConditionsContainer, Icon, Summary } from './StyleWeather';
 import LogoImg from '../../assets/listo_transp.png'
-
-const weatherUrl = 'http://localhost:4004'
 
 export class Weather extends Component {
   constructor(props) {
@@ -37,28 +35,23 @@ export class Weather extends Component {
   getWeather = async () => {
     const city = this.state.nameCity || 'Barcelona';
     this.setState({nameCity: city});
-    const generalWeather = await FetchWeather
-      .apiRequest({ city })
+    const generalWeather = await dataRequests
+      .fetchWeather({ city })
       .catch(error => console.log(error));
     this.setState({forecast: generalWeather});
   }
 
-  getCity = async (city) => {
-    await axios({
-      method: 'get', 
-      url: `${weatherUrl}/alerts/${city}`,
-      'content-type': 'application/json'
-    })
-    .then(alerts => {
-      console.log(alerts);
-      const lcCity = alerts.data.city;
-      lcCity && this.setState({
-        listCity: lcCity,
-        emergencyType: alerts.data.type,
-        severity: alerts.data.severity
-      });
-    })
-    .catch(error => console.log('Error:', error));
+  getCity = async (nameCity) => {
+    await dataRequests
+      .fetchCity(nameCity)
+      .then(response => {
+        this.setState({
+          listCity: response.data.city, 
+          emergencyType: response.data.type,
+          severity: response.data.severity
+        })
+      })
+      .catch(error => console.log('Error:', error));
   }
 
   handleChange = event => {

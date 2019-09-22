@@ -1,20 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 
-import { AlertContainer, Icon, AlertButton, AlertText,  } from './StyleAlertGeneral';
+import { AlertContainer, AlertButton, AlertText, Icon, StyledLink } from './StyleAlertGeneral';
 
 import emergency from '../../assets/emergency.png';
 import alert from '../../assets/alert.png';
 import warning from '../../assets/warning.png';
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  border-radius: 8px;
-  &:focus, &:hover, &:visited, &:link, &:active {
-    text-decoration: none;
-  }
-`;
 
 const icons = {
   'warning': emergency,

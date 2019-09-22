@@ -1,14 +1,11 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const AlertContainer = styled.div`
   border: 1px solid #FF9F1C;
   padding: 5px;
   border-radius: 5px;
   background-color: white;
-`;
-
-export const Icon = styled.img`
-  width: 100px;
 `;
 
 export const AlertButton = styled.div`
@@ -39,5 +36,17 @@ export const AlertText = styled.div`
   margin: 20px;
   color: red;
   font-weight: 800
+`;
+
+export const Icon = styled.img`
+  width: 100px;
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  border-radius: 8px;
+  &:focus, &:hover, &:visited, &:link, &:active {
+    text-decoration: none;
+  }
 `;
 
