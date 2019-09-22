@@ -7,12 +7,19 @@ const serverUrl = 'http://localhost:4004';
 
 const dataRequests = {
 
+  getHeaders() {
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+  },
+
   fetchWeather({ city } = {}) {
-    return axios({
-      method: 'get',
-      url:`${apiUrl}${WEATHER_KEY}&q=${city}`,
-      'content-type': 'application/json',
-    })
+    return axios.get(
+      `${apiUrl}${WEATHER_KEY}&q=${city}`,
+      this.getHeaders()
+    )
     .then(response => {
       const currentLocation = [];
       const currentWeather = [];
@@ -32,11 +39,10 @@ const dataRequests = {
   }, 
 
   fetchCity ({ city } = {}) {
-    return axios({
-      method: 'get', 
-      url: `${weatherUrl}/alerts/${city}`,
-      'content-type': 'application/json'
-    })
+    return axios.get(
+      `${weatherUrl}/alerts/${city}`,
+      getHeaders()
+    )
     .then(alerts => {
       const lcCity = alerts;
       return lcCity;
@@ -44,23 +50,21 @@ const dataRequests = {
   }, 
 
   fetchAlert ({ city } = {}) {
-    return axios({
-      method: 'get', 
-      url: `${serverUrl}/alerts/${city}`,
-      'content-type': 'application/json'
-    })
+    return axios.get(
+      `${serverUrl}/alerts/${city}`,
+      this.getHeaders()
+    )
     .then(({ data }) => {
       const alert = data;
       return alert;
     })
   }, 
 
-  fetchPreparations ({ disaster } = {}) {
-    return axios({
-      method: 'get', 
-      url: `${serverUrl}/disaster/${disaster}`,
-      'content-type': 'application/json'
-    })
+  fetchPreparations () {
+    return axios.get(
+      `${serverUrl}/disaster`,
+      this.getHeaders()
+    )
     .then(({ data }) => {
       const preparations = data;
       return preparations;
@@ -68,15 +72,14 @@ const dataRequests = {
   }, 
 
   fetchSuggestions ({ disaster } = {}) {
-    return axios({
-      method: 'get',
-      url: `${serverUrl}/disaster/${disaster}`,
-      'content-type': 'application/json'
+    return axios.get(
+      `${serverUrl}/disaster/${disaster}`,
+      this.getHeaders()
+    )
+    .then(({ data }) => {
+      const suggestions = data;
+      return suggestions;
     })
-      .then(({ data }) => {
-        const suggestions = data;
-        return suggestions;
-      })
   }
 }
 
