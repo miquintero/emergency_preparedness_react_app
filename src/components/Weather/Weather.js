@@ -1,109 +1,97 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from "react";
 import Moment from 'react-moment';
 
-import AlertGeneral from '../AlertGeneral/AlertGeneral';
 import dataRequests from '../../utils/DataRequests';
+import usePrevious from '../../utils/CompareHook';
+import AlertGeneral from '../AlertGeneral/AlertGeneral';
 
 import { Wrapper, WeekDay, Logo, FormContainer, InputForm, UserInput, SubmitButton, City, Region, Temperature, Degrees, Time, ConditionsContainer, Icon, Summary } from './StyleWeather';
 import LogoImg from '../../assets/listo_transp.png'
 
-export class Weather extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nameCity: '',
-      forecast: [],
-      emergencyType: '',
-      alertCity: '',
-      listCity: '',
-      alertTitle: '',
-      alertDescription: '',
-      severity: ''
-    }
-  }
+function Weather () {
 
-  componentDidMount() {
-    this.getWeather();
-  } 
-  
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.alertCity !== this.state.alertCity) {
-      this.getCity(this.state.alertCity);
-    }
-  }
-  
-  getWeather = async () => {
-    const city = this.state.nameCity || 'Barcelona';
-    this.setState({nameCity: city});
-    const generalWeather = await dataRequests
-      .fetchWeather({ city })
-      .catch(error => console.log(error));
-    this.setState({forecast: generalWeather});
-  }
+  const [nameCity, setNameCity] = useState('');
+  const [forecast, setForecast] = useState([]);
+  const [emergencyType, setEmergencyType] = useState('');
+  const [alertCity, setAlertCity] = useState('');
+  const [listCity, setListCity] = useState('');
+  const [severity, setSeverity] = useState('');
 
-  getCity = async (nameCity) => {
+  const getWeather = async () => {
+    const city = nameCity || 'Barcelona';
+    setNameCity(city);
     await dataRequests
-      .fetchCity(nameCity)
-      .then(response => {
-        this.setState({
-          listCity: response.data.city, 
-          emergencyType: response.data.type,
-          severity: response.data.severity
-        })
-      })
+      .fetchWeather({city})
+      .then(weather => setForecast(weather))
       .catch(error => console.log('Error:', error));
   }
 
-  handleChange = event => {
+  const getCity = async (nameCity) => {
+    await dataRequests
+      .fetchCity(nameCity)
+      .then(response => {
+        const data = response.data;
+        setListCity(data.city);
+        setEmergencyType(data.type);
+        setSeverity(data.severity) 
+      })
+      .catch(error => console.log('Error:', error));
+  }
+  
+  const handleChange = event => {
     const input = (event.target.value).toLowerCase();
-    this.setState({nameCity: input});
+    setNameCity(input);
   }
 
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    this.getWeather();
-    this.getCity();
-    this.setState({
-      alertCity: this.state.nameCity,
-      nameCity: ''
-    });
+    getWeather();
+    getCity();
+    setAlertCity(nameCity);
+    setNameCity('');
   }
-    
-  render() {
-    const { forecast } = this.state;    
-    return (
-      <Wrapper className="weather">
-        <WeekDay><p>{new Date().toLocaleDateString('en-us',  {weekday: 'long' })}</p></WeekDay>
-        <Time><Moment className="time" format='HH:mm'>{forecast[7]}</Moment></Time>          
-        <Logo><img src={LogoImg} width="160" alt="logo that says Listo"/></Logo>
-        <FormContainer>
-          <InputForm>
-            <UserInput 
-              type="text" 
-              onChange={this.handleChange} 
-              value={this.state.nameCity} 
-              placeholder="Type a city name" 
-            />
-            <SubmitButton onClick={this.handleSubmit} type="submit"/>
-          </InputForm>
-        </FormContainer>
-        <City>{forecast[0]}</City>
-        <Region>{forecast[1]} | {forecast[2]}</Region>
-        <AlertGeneral  region={this.state.forecast[1]} 
-          nameCity={this.state.nameCity} 
-          alertCity={this.state.alertCity} 
-          listCity={this.state.listCity} 
-          emergencyType={this.state.emergencyType}
-          severity={this.state.severity}
-        />
-        <Temperature> {forecast[10]}<Degrees>°C</Degrees></Temperature>
-        <ConditionsContainer>
-          <Summary>The weather is<br/>{forecast[31]}</Summary>
-          <Icon alt="icon of weather conditions" src={forecast[32]}/>
-        </ConditionsContainer>   
-      </Wrapper>
-    )
-  }
+
+  const prevSearch = usePrevious(alertCity);
+
+  useEffect(() => {
+    getWeather();
+    if (prevSearch !== alertCity) {
+      getCity(alertCity);
+    }
+  }, []);
+       
+  return (
+    <Wrapper className="weather">
+      <WeekDay><p>{new Date().toLocaleDateString('en-us',  {weekday: 'long' })}</p></WeekDay>
+      <Time><Moment className="time" format='HH:mm'>{forecast[7]}</Moment></Time>          
+      <Logo><img src={LogoImg} width="160" alt="logo that says Listo"/></Logo>
+      <FormContainer>
+        <InputForm>
+          <UserInput 
+            type="text" 
+            value={nameCity} 
+            onChange={handleChange} 
+            placeholder="Type a city name" 
+          />
+          <SubmitButton onClick={handleSubmit} type="submit"/>
+        </InputForm>
+      </FormContainer>
+      <City>{forecast[0]}</City>
+      <Region>{forecast[1]} | {forecast[2]}</Region>
+      <AlertGeneral  region={forecast[1]} 
+        nameCity={nameCity} 
+        alertCity={alertCity} 
+        listCity={listCity} 
+        emergencyType={emergencyType}
+        severity={severity}
+      />
+      <Temperature> {forecast[10]}<Degrees>°C</Degrees></Temperature>
+      <ConditionsContainer>
+        <Summary>The weather is<br/>{forecast[31]}</Summary>
+        <Icon alt="icon of weather conditions" src={forecast[32]}/>
+      </ConditionsContainer>   
+    </Wrapper>
+  );
 }
 
 export default Weather;

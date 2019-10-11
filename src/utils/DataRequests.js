@@ -40,7 +40,7 @@ const dataRequests = {
   fetchCity ({ city } = {}) {
     return axios.get(
       `${weatherUrl}/alerts/${city}`,
-      getHeaders()
+      this.getHeaders()
     )
     .then(alerts => {
       const lcCity = alerts;
