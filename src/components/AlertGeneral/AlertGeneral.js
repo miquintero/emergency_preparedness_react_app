@@ -43,7 +43,7 @@ export class AlertGeneral extends Component {
               Good news!<br/>There are currently no weather alerts in your area.
             </AlertText>
             <AlertButton className='alertbutton'>
-              <StyledLink to='/disaster'>
+              <StyledLink to='/disaster/${disaster}'>
                 In case of future alerts
               </StyledLink>
             </AlertButton>
