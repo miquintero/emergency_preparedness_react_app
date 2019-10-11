@@ -1,9 +1,9 @@
 import React from 'react';
-import Dashboard from '../Dashboard/Dashboard';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import EmergencyDetails from '../EmergencyDropdown/EmergencyDropdown';
-import AlertBackdrop from '../AlertBackdrop/AlertBackdrop';
 
+import Dashboard from '../Dashboard/Dashboard';
+import Disaster from '../Disaster/Disaster';
+import Alert from '../Alert/Alert';
 import './App.css';
 
 function App() {
@@ -11,8 +11,8 @@ function App() {
     <div className="App">
       <Router>
         <Route exact path='/' component={Dashboard} />
-        <Route path='/disaster' component={EmergencyDetails} />
-        <Route path='/alerts/:city' component={AlertBackdrop} />
+        <Route path='/disaster' component={Disaster} />
+        <Route path='/alerts/:city' component={Alert} />
       </Router>
     </div>
   );
