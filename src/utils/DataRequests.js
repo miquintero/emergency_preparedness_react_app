@@ -3,7 +3,6 @@ import axios from 'axios';
 const WEATHER_KEY = process.env.REACT_APP_WEATHER_KEY;
 const apiUrl = 'https://api.apixu.com/v1/current.json?key=';
 const weatherUrl = `http://localhost:${process.env.REACT_APP_PORT}`
-const serverUrl = 'http://localhost:4004';
 
 const dataRequests = {
 
@@ -51,7 +50,7 @@ const dataRequests = {
 
   fetchAlert ({ city } = {}) {
     return axios.get(
-      `${serverUrl}/alerts/${city}`,
+      `${weatherUrl}/alerts/${city}`,
       this.getHeaders()
     )
     .then(({ data }) => {
@@ -62,7 +61,7 @@ const dataRequests = {
 
   fetchPreparations () {
     return axios.get(
-      `${serverUrl}/disaster`,
+      `${weatherUrl}/disaster`,
       this.getHeaders()
     )
     .then(({ data }) => {
@@ -73,7 +72,7 @@ const dataRequests = {
 
   fetchSuggestions ({ disaster } = {}) {
     return axios.get(
-      `${serverUrl}/disaster/${disaster}`,
+      `${weatherUrl}/disaster/${disaster}`,
       this.getHeaders()
     )
     .then(({ data }) => {
