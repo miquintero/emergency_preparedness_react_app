@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard';
 import Disaster from '../Disaster/Disaster';
 import Alert from '../Alert/Alert';
-import './App.css';
 
 function App() {
   return (
