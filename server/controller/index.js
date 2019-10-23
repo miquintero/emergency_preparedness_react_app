@@ -1,6 +1,6 @@
-const model = require('../model/index');
-const Alert = require('../model/alerts');
-const Preparation = require('../model/preparation');
+const model = require('../db/models/index');
+const Alert = require('../db/models/alerts');
+const Preparation = require('../db/models/preparation');
 
 exports.getAlert = async (req, res) => {
   try {

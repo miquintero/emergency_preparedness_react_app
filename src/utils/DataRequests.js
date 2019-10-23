@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const GEOCODE_KEY = process.env.REACT_APP_GEOCODE_KEY;
 const WEATHER_KEY = process.env.REACT_APP_WEATHER_KEY;
-const apiUrl = 'https://api.apixu.com/v1/current.json?key=';
+
+const googleUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+const darkskyUrl = 'https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/';
 const weatherUrl = `http://localhost:${process.env.REACT_APP_PORT}`
 
 const dataRequests = {
@@ -14,27 +17,23 @@ const dataRequests = {
     };
   },
 
-  fetchWeather({ city } = {}) {
+  geoCoding({ address } = {}) {
     return axios.get(
-      `${apiUrl}${WEATHER_KEY}&q=${city}`,
+      `${googleUrl}${address}&key=${GEOCODE_KEY}`,
       this.getHeaders()
     )
     .then(response => {
-      const currentLocation = [];
-      const currentWeather = [];
-      const currentCondition = [];
-      for (let key in response.data.location) {
-        currentLocation.push(response.data.location[key]);
-      }
-      for (let key in response.data.current) {
-        currentWeather.push(response.data.current[key]);
-      }
-      for (var key in response.data.current.condition) {
-        currentCondition.push(response.data.current.condition[key]);
-      }
-      const generalWeather = [...currentLocation, ...currentWeather, ...currentCondition];
-      return generalWeather;
+      const results = response.data.results[0];
+      const coords = results.geometry.location;
+      return coords;
     })
+  },
+  
+  fetchWeather({ lat, lng } = {}) {
+    return axios.get(
+      `${darkskyUrl}${WEATHER_KEY}/${lat},${lng}`,
+      this.getHeaders()
+    )
   }, 
 
   fetchCity ({ city } = {}) {
