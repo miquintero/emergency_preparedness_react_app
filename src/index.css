@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Darker+Grotesque&display=swap');
+
+body {
+  font-family: Quicksand;
+  background: #D0E3CC;
+  color: white;
+  font-family: 'Darker Grotesque', sans-serif;
+  /* height: 100px; */
+}
+
+.App {
+  background: #D0E3CC;
+  width: 80%;
+  margin: 0 auto;
+}
+
